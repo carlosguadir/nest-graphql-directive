@@ -33,3 +33,27 @@ $ yarn run test:e2e
 # test coverage
 $ yarn run test:cov
 ```
+
+
+
+## Local validation
+
+Navigate to 
+
+(http://localhost:3000/api)[http://localhost:3000/api]
+
+```graphql
+
+query sweetData {
+  sweetData( where: { uuid: "Hola" }) {
+    id firstName
+  }
+}
+
+mutation createSweetData {
+  createSweetData {
+    id lastName
+  }
+}
+
+```

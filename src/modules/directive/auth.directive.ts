@@ -1,5 +1,6 @@
 import { getDirective, MapperKind, mapSchema } from '@graphql-tools/utils';
-import { defaultFieldResolver, GraphQLSchema } from 'graphql';
+import { ForbiddenError } from '@nestjs/apollo';
+import { defaultFieldResolver, GraphQLError, GraphQLSchema } from 'graphql';
 
 export function authDirective(
   schema: GraphQLSchema,
@@ -33,11 +34,25 @@ export function authDirective(
          * to share transversally in graphql requests.
          * https://www.apollographql.com/docs/apollo-server/migration/#context-initialization-function
          */
-        console.info(context);
-        const result = await resolve(source, args, context, info);
-        if (typeof result === 'string') {
-          return result.toUpperCase();
+        // console.info(context);
+
+        /**
+         * You can run directive before execute resolver, and probably return a GraphQLError
+         */
+        // Some example
+        if ( args?.where?.uuid === 'not-authorized-resource' ) {
+          throw new ForbiddenError('You are not authorize to read/create this object')
         }
+
+        // Other example PSDT: image that is negated
+        if (context?.user?.permissions === authDirectiveConfig?.type ) {
+          throw new ForbiddenError('Not authorize to read the object' )
+        }
+        const result = await resolve(source, args, context, info);
+        
+        /**
+         * You can run directive after execute resolver, here this can be use to filtering data
+         */
         return result;
       };
       return fieldConfig;
