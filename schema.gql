@@ -1,0 +1,35 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+directive @auth(
+  """Type of resources to authorize"""
+  type: String
+
+  """Action in object"""
+  action: ActioType
+) on QUERY
+
+type SweetObject {
+  id: Int!
+  firstName: String
+  lastName: String
+}
+
+type Query {
+  sweetData(where: SweetInput!): SweetObject!
+}
+
+input SweetInput {
+  uuid: String!
+}
+
+type Mutation {
+  createSweetData: SweetObject!
+}
+
+enum ActioType {
+  READ
+  UPDATE
+  CREATE
+}
